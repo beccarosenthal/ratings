@@ -40,23 +40,25 @@ def load_movies():
 
     # Delete all rows in table, so if we need to run this a second time,
     # we won't be trying to add duplicate users
-    User.query.delete()
+    Movie.query.delete()
 
     #generate data from file
     for row in open('seed_data/u.item'):
         row = row.rstrip()
         row = row.split("|")
 
-        #to get rid of year, we could use regex...but we're not
+        #to get rid of (year), we could use regex...but we're not
         movie_id = int(row[0])
         title = row[1][:-7]
-       
+
         #clean up date, create datetime object
-        date_string = row[2] #as string format (##-mon-####)
+        date_string = row[2]  #as string format (##-mon-####)
+
         if date_string:
             released_at = datetime.strptime(date_string, '%d-%b-%Y') #as datetime object
         else:
             released_at = None #is it a datetime object?
+
         imdb_url = row[4]
 
         movie = Movie(movie_id=movie_id,
@@ -72,6 +74,22 @@ def load_movies():
 
 def load_ratings():
     """Load ratings from u.data into database."""
+
+    # Delete all rows in table, so if we need to run this a second time,
+    # we won't be trying to add duplicate users
+    Rating.query.delete()
+
+    for row in open('seed_data/u.data'):
+        row = row.rstrip()
+        user_id, movie_id, score, not_using_this = row.split('\t')
+
+        rating = Rating(user_id=user_id,
+                        movie_id=movie_id,
+                        score=score)
+
+        db.session.add(rating)
+
+    db.session.commit()
 
 
 def set_val_user_id():
@@ -93,8 +111,8 @@ if __name__ == "__main__":
     # In case tables haven't been created, create them
     db.create_all()
 
-    # Import different types of data
+    # # Import different types of data
     load_users()
     load_movies()
-    # load_ratings()
-    # set_val_user_sid()
+    load_ratings()
+    set_val_user_id()
