@@ -20,16 +20,18 @@ def load_users():
     User.query.delete()
 
     # Read u.user file and insert data
-    for row in open("seed_data/u.user"):
-        row = row.rstrip()
-        user_id, age, gender, occupation, zipcode = row.split("|")
 
-        user = User(user_id=user_id,
-                    age=age,
-                    zipcode=zipcode)
+    with open("seed_data/u.user") as user_data_file:
+        for row in user_data_file:
+            row = row.rstrip()
+            user_id, age, gender, occupation, zipcode = row.split("|")
 
-        # We need to add to the session or it won't ever be stored
-        db.session.add(user)
+            user = User(user_id=user_id,
+                        age=age,
+                        zipcode=zipcode)
+
+            # We need to add to the session or it won't ever be stored
+            db.session.add(user)
 
     # Once we're done, we should commit our work
     db.session.commit()
@@ -43,30 +45,31 @@ def load_movies():
     Movie.query.delete()
 
     #generate data from file
-    for row in open('seed_data/u.item'):
-        row = row.rstrip()
-        row = row.split("|")
+    with open("seed_data/u.item") as movie_data_file:
+        for row in movie_data_file:
+            row = row.rstrip()
+            row = row.split("|")
 
-        #to get rid of (year), we could use regex...but we're not
-        movie_id = int(row[0])
-        title = row[1][:-7]
+            #to get rid of (year), we could use regex...but we're not
+            movie_id = int(row[0])
+            title = row[1][:-7]
 
-        #clean up date, create datetime object
-        date_string = row[2]  #as string format (##-mon-####)
+            #clean up date, create datetime object
+            date_string = row[2]  #as string format (##-mon-####)
 
-        if date_string:
-            released_at = datetime.strptime(date_string, '%d-%b-%Y') #as datetime object
-        else:
-            released_at = None #is it a datetime object?
+            if date_string:
+                released_at = datetime.strptime(date_string, '%d-%b-%Y') #as datetime object
+            else:
+                released_at = None #is it a datetime object?
 
-        imdb_url = row[4]
+            imdb_url = row[4]
 
-        movie = Movie(movie_id=movie_id,
-                      title=title,
-                      released_at=released_at,
-                      imdb_url=imdb_url)
+            movie = Movie(movie_id=movie_id,
+                          title=title,
+                          released_at=released_at,
+                          imdb_url=imdb_url)
 
-        db.session.add(movie)
+            db.session.add(movie)
 
     #add to database
     db.session.commit()
@@ -78,16 +81,16 @@ def load_ratings():
     # Delete all rows in table, so if we need to run this a second time,
     # we won't be trying to add duplicate users
     Rating.query.delete()
+    with open("seed_data/u.data") as rating_data_file:
+        for row in rating_data_file:
+            row = row.rstrip()
+            user_id, movie_id, score, not_using_this = row.split('\t')
 
-    for row in open('seed_data/u.data'):
-        row = row.rstrip()
-        user_id, movie_id, score, not_using_this = row.split('\t')
+            rating = Rating(user_id=user_id,
+                            movie_id=movie_id,
+                            score=score)
 
-        rating = Rating(user_id=user_id,
-                        movie_id=movie_id,
-                        score=score)
-
-        db.session.add(rating)
+            db.session.add(rating)
 
     db.session.commit()
 
