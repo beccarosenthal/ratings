@@ -36,10 +36,10 @@ class Movie(db.Model):
     """Movie being rated"""
 
     __tablename__ = "movies"
-
+    #the seed data has id on it already; will incriment fuck up
     movie_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
-    released_at = db.Column(db.DateTime, nullable=False)
+    released_at = db.Column(db.DateTime, nullable=True)
     imdb_url = db.Column(db.String(150), nullable=False)
 
     def __repr__(self):
