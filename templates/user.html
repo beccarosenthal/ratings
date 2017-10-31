@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %} {{ user.user_id }} {% endblock %}
+{% block content %}
+    <h2>What Has User {{ user.user_id }} Rated?</h2>
+    About the User:<ul>
+    
+</ul>
+
+<!-- TO DO:
+
+Figure out how to query various data about what that user has rated and 
+display it nicely.
+
+will need joins that user the stuff in model.py to do the querying. 
+
+Will need jinja loop to make items in list
+ -->
+
+
+{% endblock %}

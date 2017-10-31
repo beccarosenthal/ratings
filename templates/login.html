@@ -1,14 +1,12 @@
 {% extends 'base.html' %}
 {% block title %} Login {% endblock %}
 {% block content %}
-{% for message in get_flashed_messages() %}
-    {{ message }}
-{% endfor %}
+ 
 <h1>Log In!</h1>
 <form action="/login" method="POST">
 Email Address:<input name="email" type='text' required><br>
 <!-- any way to make it so user password doesn't show up on screen? -->
-Password:<input name="password" type="text" required> <br>
+Password:<input name="password" type="password" required> <br>
 
 <input type="submit">
 {% endblock %}

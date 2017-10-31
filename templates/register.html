@@ -3,16 +3,13 @@
 {% block content %}
     <h2>Registration</h2>
 
-<!-- If here because you put in the wrong password, it'll tell you -->
-{% for message in get_flashed_messages() %}
-    {{ message }}
-{% endfor %}
+
 <!-- Make a form that gets user email and password -->
 
 <form action="/register" method="POST">
 Email Address:<input name="email" type='text' required><br>
 <!-- any way to make it so user password doesn't show up on screen? -->
-Password:<input name="password" type="text" required> 
+Password:<input name="password" type="password" required> 
 
 <p>If you are a new user, please fill in the following:</p>
 Age: <input name='age' type='text'><br>

@@ -37,6 +37,14 @@ def display_users():
     return render_template('user_list.html', users=users)
 
 
+@app.route('/users/<specific_user_id>')
+def show_specific_user(specific_user_id):
+    
+    specific_user = User.query.filter(User.user_id == specific_user_id).one()
+    print specific_user
+    return render_template('user.html', user=specific_user)
+    
+
 @app.route('/register')
 def register_form():
 
@@ -64,8 +72,6 @@ def process_form():
                         zipcode=zipcode)
         db.session.add(new_user)
         db.session.commit()
-        
-
 
     return redirect('/login')
 
@@ -73,6 +79,10 @@ def process_form():
 @app.route('/login')
 def show_login_form():
     """render login form"""
+
+    if 'current_user' in session:
+        flash('You\'re already logged in...silly goose')
+        return redirect('/')
     return render_template('login.html')
 
 
@@ -86,7 +96,7 @@ def login_user():
     if user_object:
     # if user_email in db.session.query(User.email).all():
         print "in the database"
-        
+
         if user_object.password == user_password:
             flash("You're logged in. Welcome to Ratingsville! ~rate away~")
             session['current_user'] = user_email
@@ -96,7 +106,12 @@ def login_user():
             flash("That is an incorrect password")
             return redirect('/login')
 
-
+#no html route for logout because ain't nobody got time for that
+@app.route('/logout')
+def logout_user():
+    del session['current_user']
+    flash('successfully logged out...50-50 odds')
+    return redirect ('/')
 
 
 if __name__ == "__main__":
