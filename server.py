@@ -124,6 +124,23 @@ def logout_user():
     return redirect ('/')
 
 
+@app.route('/movies')
+def show_all_movies():
+    """Displays list of all movies"""
+
+    movies = Movie.query.order_by(Movie.title).all()
+
+    return render_template('movie_list.html', movies=movies)
+
+@app.route('/movies/<specific_movie_id>')
+def show_specific_user(specific_movie_id):
+
+    specific_movie = User.query.filter(Movie.movie_id == specific_movie_id).one()
+    print specific_movie
+    return render_template('movie.html', movie=specific_movie)
+    
+
+
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension
