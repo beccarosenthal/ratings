@@ -13,7 +13,8 @@
     <h3>Ratings</h3> <ul>
     {% if 'current_user' in session %}
         {% if user_has_rated  == True %}
-            <li>You gave {{movie.title}} a rating of FIGURE THIS OUT</li>
+            <p>You already rated {{movie.title}}.<br>
+                Other users have too!</p>
         {% else %}
             <li>What rating (between 1-5) would you like to give this movie?
                 <form action='/add_rating'>

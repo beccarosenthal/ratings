@@ -155,12 +155,15 @@ def show_specific_movie(specific_movie_id):
 def add_user_rating():
     """take user rating for movie, add to db"""
 
-#for now we're writing it as though our users will give 
-# an int btwn 1-5. Validate later.
-
-    new_rating = int(request.args.get('user_rating'))
     user_id = int(session['current_user'])
     movie_id = int(request.args.get('movie_id'))
+
+    try:
+        new_rating = int(request.args.get('user_rating'))
+    except:
+        flash("That was an invalid rating...silly goose")
+        return redirect('/movies/' + str(movie_id))
+              
 
     print new_rating, 'new_rating'
     print user_id, 'user id'
@@ -173,6 +176,9 @@ def add_user_rating():
 
         db.session.add(rating_to_add)
         db.session.commit()
+
+    else:
+        flash('the rating must be between 1-5, silly goose')
 
     return redirect('/movies/' + str(movie_id))
    
