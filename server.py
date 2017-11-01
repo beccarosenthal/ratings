@@ -95,18 +95,15 @@ def login_user():
     user_password = request.form.get('password')
 
     user_object = User.query.filter(User.email == user_email).first()
-    if user_object:
-    # if user_email in db.session.query(User.email).all():
-        print "in the database"
+    if user_object:        
 
         if user_object.password == user_password:
             flash("You're logged in. Welcome to Ratingsville! ~rate away~")
             specific_user_id = user_object.user_id
-            session['current_user'] = user_email
+            session['current_user'] = specific_user_id
 
             #What is the specific user ID
             url = '/users/' + str(specific_user_id)
-            # import pdb; pdb.set_trace()
             return redirect(url)
 
         else:
@@ -116,9 +113,11 @@ def login_user():
         flash('You need to register first!')
         return redirect('/register')
 
-#no html route for logout because ain't nobody got time for that
+
 @app.route('/logout')
 def logout_user():
+    """logs out user by deleting the current user from the session"""
+
     del session['current_user']
     flash('successfully logged out...50-50 odds')
     return redirect ('/')
@@ -132,14 +131,51 @@ def show_all_movies():
 
     return render_template('movie_list.html', movies=movies)
 
+
 @app.route('/movies/<specific_movie_id>')
-def show_specific_user(specific_movie_id):
+def show_specific_movie(specific_movie_id):
+    """show movie details page for specific movie by id"""
 
-    specific_movie = User.query.filter(Movie.movie_id == specific_movie_id).one()
-    print specific_movie
-    return render_template('movie.html', movie=specific_movie)
+    specific_movie = Movie.query.filter(Movie.movie_id ==
+                                        specific_movie_id).one()
+   
+    user_has_rated = False
+    if 'current_user' in session:
+    #figure out if logged in user has already rated that movie
+        for rating_obj in specific_movie.ratings:
+            if rating_obj.user_id == session['current_user']:
+                user_has_rated = True
+                break
+
+    return render_template('movie.html', movie=specific_movie, 
+                            user_has_rated=user_has_rated)
+
+
+@app.route('/add_rating')
+def add_user_rating():
+    """take user rating for movie, add to db"""
+
+#for now we're writing it as though our users will give 
+# an int btwn 1-5. Validate later.
+
+    new_rating = int(request.args.get('user_rating'))
+    user_id = int(session['current_user'])
+    movie_id = int(request.args.get('movie_id'))
+
+    print new_rating, 'new_rating'
+    print user_id, 'user id'
+    print movie_id, "movie id"
     
+    if new_rating >= 1 and new_rating <= 5:
+        rating_to_add = Rating(score=new_rating, 
+                               user_id=user_id, 
+                               movie_id=movie_id)
 
+        db.session.add(rating_to_add)
+        db.session.commit()
+
+    return redirect('/movies/' + str(movie_id))
+   
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
