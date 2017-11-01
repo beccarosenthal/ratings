@@ -32,14 +32,14 @@ def index():
 @app.route('/users')
 def display_users():
     """lists users with email addresses and user ids)"""
-    
+
     users = User.query.all()
     return render_template('user_list.html', users=users)
 
 
 @app.route('/users/<specific_user_id>')
 def show_specific_user(specific_user_id):
-    
+
     specific_user = User.query.filter(User.user_id == specific_user_id).one()
     print specific_user
     return render_template('user.html', user=specific_user)
@@ -47,13 +47,14 @@ def show_specific_user(specific_user_id):
 
 @app.route('/register')
 def register_form():
+    """show registration form"""
 
     return render_template('register.html')
 
 
 @app.route('/register', methods=['POST'])
 def process_form():
-
+    """process registration form"""
     user_email = request.form.get('email')
     user_password = request.form.get('password')
     age = request.form.get('age')
@@ -88,6 +89,7 @@ def show_login_form():
 
 @app.route('/login', methods=['POST'])
 def login_user():
+    """process login form, redirect to user's page when it works"""
     #get form data
     user_email = request.form.get('email')
     user_password = request.form.get('password')
@@ -99,12 +101,20 @@ def login_user():
 
         if user_object.password == user_password:
             flash("You're logged in. Welcome to Ratingsville! ~rate away~")
+            specific_user_id = user_object.user_id
             session['current_user'] = user_email
-            return redirect('/')
+
+            #What is the specific user ID
+            url = '/users/' + str(specific_user_id)
+            # import pdb; pdb.set_trace()
+            return redirect(url)
 
         else:
             flash("That is an incorrect password")
             return redirect('/login')
+    else:
+        flash('You need to register first!')
+        return redirect('/register')
 
 #no html route for logout because ain't nobody got time for that
 @app.route('/logout')

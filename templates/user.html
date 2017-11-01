@@ -1,20 +1,18 @@
 {% extends 'base.html' %}
-{% block title %} {{ user.user_id }} {% endblock %}
+{% block title %} User {{ user.user_id }} {% endblock %}
 {% block content %}
-    <h2>What Has User {{ user.user_id }} Rated?</h2>
-    About the User:<ul>
-    
-</ul>
+    <h2>User {{ user.user_id }} is {{ user.age }} years old. Their zip code is {{ user.zipcode }}.</h2>
+    {% if user.ratings %}
+    What have they rated? <ul>
+        {% for item in user.ratings %}
+        <li> {{item.movie.title}}: {{ item.score }}</li>
+        {% endfor %}
+    {% else %}
+    <p>User {{ user.user_id }} hasn't rated anything yet!</p>
+    {% endif %}
+    </ul>
+        
 
-<!-- TO DO:
-
-Figure out how to query various data about what that user has rated and 
-display it nicely.
-
-will need joins that user the stuff in model.py to do the querying. 
-
-Will need jinja loop to make items in list
- -->
 
 
 {% endblock %}
