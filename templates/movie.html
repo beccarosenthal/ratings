@@ -3,33 +3,61 @@
 {% block content %}
 
     <h2>{{ movie.title }}</h2>
-    <p> (Movie Id): {{movie.movie_id}}</p>
+    <p>Movie Id: {{movie.movie_id}}</p>
 
-    <h3>About {{ movie.title}}</h3>
+    <h3>About {{ movie.title}}:</h3>
     <ul> 
         <li>Release Date: {{movie.released_at}} </li>
         <li><a href={{movie.imdb_url}}>imdb url</a></li>    
     </ul>
-    <h3>Ratings</h3> <ul>
-    {% if 'current_user' in session %}
-        {% if user_has_rated  == True %}
-            <p>You already rated {{movie.title}}.<br>
-                Other users have too!</p>
-        {% else %}
-            <li>What rating (between 1-5) would you like to give this movie?
-                <form action='/add_rating'>
-                    <input type='text' name='user_rating' required>
-                    <input type='hidden' name='movie_id' value={{movie.movie_id}}>
-                <input type='submit'></li></form>
-        {% endif %}
-    {% else %}
-        <li><a href='/login'>Log in to rate!</a></li>
-    {% endif %}
 
-    {% for rating in movie.ratings %}
-    <li>Score: {{rating.score}}, as rated by User #{{rating.user_id}}</li>
-    {% endfor %}
-    </ul>
+    <h3>Ratings</h3> 
+        {% if 'current_user' in session %}
+            <!-- If user has rated movie already -->
+            {% if user_has_rated  == True %}
+                <p>You gave {{movie.title}} a rating of 
+
+                {% for rating in movie.ratings %}
+                    {% if rating.user_id == session['current_user'] %}
+                    {{rating.score}}                    
+                    {% endif %}
+                {% endfor %}
+                </p>
+                <h4>Would you like to change your rating?</h4>
+            {% else %}
+                <h4>What rating would you like to give {{movie.title}}?</h4>
+            {% endif %}
+
+            <form action='/add_rating'>
+                <select name='user_rating'>
+                    <option value='1'>1</option>
+                    <option value='2'>2</option>
+                    <option value='3'>3</option>
+                    <option value='4'>4</option>
+                    <option value='5'>5</option>
+                </select>
+                    <input type='hidden' name='movie_id' value={{movie.movie_id}}>
+                <input type='submit'>
+            </form>
+        <!-- If no user is logged in -->
+        {% else %}
+            <a href='/login'>Log in to rate {{movie.title}}!</a>
+        {% endif %}
+
+        <p>How did other users rate it?</p>
+        <table>
+            <tr>
+                <th>User Id     </th>
+                <th>Rating</th>
+            </tr>
+        {% for rating in movie.ratings %}
+            <tr>
+                <td>{{rating.user_id}}:</td>
+                <td>| {{rating.score}}</td>
+            </tr>
+        {% endfor %}
+        
+        </table>
 
         
 

@@ -157,28 +157,14 @@ def add_user_rating():
 
     user_id = int(session['current_user'])
     movie_id = int(request.args.get('movie_id'))
-
-    try:
-        new_rating = int(request.args.get('user_rating'))
-    except:
-        flash("That was an invalid rating...silly goose")
-        return redirect('/movies/' + str(movie_id))
-              
-
-    print new_rating, 'new_rating'
-    print user_id, 'user id'
-    print movie_id, "movie id"
+    new_rating = int(request.args.get('user_rating'))
     
-    if new_rating >= 1 and new_rating <= 5:
-        rating_to_add = Rating(score=new_rating, 
-                               user_id=user_id, 
-                               movie_id=movie_id)
+    rating_to_add = Rating(score=new_rating, 
+                           user_id=user_id, 
+                           movie_id=movie_id)
 
-        db.session.add(rating_to_add)
-        db.session.commit()
-
-    else:
-        flash('the rating must be between 1-5, silly goose')
+    db.session.add(rating_to_add)
+    db.session.commit()
 
     return redirect('/movies/' + str(movie_id))
    
