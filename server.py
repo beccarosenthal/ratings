@@ -147,7 +147,7 @@ def show_specific_movie(specific_movie_id):
                 user_has_rated = True
                 break
 
-    return render_template('movie.html', movie=specific_movie, 
+    return render_template('movie.html', movie=specific_movie,
                             user_has_rated=user_has_rated)
 
 
@@ -155,15 +155,23 @@ def show_specific_movie(specific_movie_id):
 def add_user_rating():
     """take user rating for movie, add to db"""
 
+
     user_id = int(session['current_user'])
     movie_id = int(request.args.get('movie_id'))
     new_rating = int(request.args.get('user_rating'))
     
-    rating_to_add = Rating(score=new_rating, 
-                           user_id=user_id, 
-                           movie_id=movie_id)
+    current_rating = Rating.query.filter(Rating.movie_id == movie_id,
+                                         Rating.user_id == user_id).first()
+    if not current_rating:
+        rating_to_add = Rating(score=new_rating,
+                               user_id=user_id, 
+                               movie_id=movie_id)
 
-    db.session.add(rating_to_add)
+        db.session.add(rating_to_add)
+
+    else:
+        current_rating.score = new_rating
+        
     db.session.commit()
 
     return redirect('/movies/' + str(movie_id))
