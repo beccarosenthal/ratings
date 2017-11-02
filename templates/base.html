@@ -5,13 +5,26 @@
 </head>
 
 <body>
+    <!-- This is the nav bar -->
+    {% if 'current_user' not in session %}
+        <a href='/register'>Register | </a>
+        <a href='/login'>Log In | </a>
+    {% else %}
+        <a href='/logout'>Log Out | </a>
+        <a href=/users/{{session['current_user']}}>My Ratings | </a>
+    {% endif %}
 
-{% for message in get_flashed_messages() %}
-    {{ message }}
-{% endfor %}
+    <a href='/users'>Users | </a>
+    <a href='/movies'>Movies | </a>
+    <a href='/'>          Take Me Hooomeee!!! </a>
+  <hr>
+    {% for message in get_flashed_messages() %}
+        {{ message }}
+    {% endfor %}
   <hr>
 
-  {% block content %} put your content here {% endblock %}
+
+    {% block content %} put your content here {% endblock %}
 
 </body>
 </html>

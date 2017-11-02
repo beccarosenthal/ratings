@@ -7,16 +7,25 @@
 <!-- Make a form that gets user email and password -->
 
 <form action="/register" method="POST">
-Email Address:<input name="email" type='text' required><br>
-<!-- any way to make it so user password doesn't show up on screen? -->
-Password:<input name="password" type="password" required> 
-
-<p>If you are a new user, please fill in the following:</p>
-Age: <input name='age' type='text' required><br>
-Zip Code: <input name='zipcode' type='text' required> 
-
-<input type="submit">
-
+    <table>
+        <tr>
+             <td>Email Address: </td>
+             <td> <input name="email" type='text' required></td>
+        </tr>
+        <tr>
+            <td>Password: </td>
+            <td><input name="password" type="password" required> </td>
+        </tr>
+        <tr>
+            <td>Age: </td>
+            <td><input name='age' type='text' required></td>
+        </tr>
+        <tr>
+            <td>Zip Code: </td>
+            <td><input name='zipcode' type='text' required></td>
+        </tr>
+    </table>
+    <input type="submit">
 </form>
 
 

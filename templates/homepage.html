@@ -3,12 +3,7 @@
 {% block content %}
 
 <!-- determine which links are viewable on the homepage based on login -->
-{% if 'current_user' not in session %}
-    <a href='/register'>Register Here</a><br>
-    <a href='/login'>Returning Users, Log In Here</a><br>
-{% else %}
-    <a href='/logout'>Log Out</a><br>
-{% endif %}
+
 
 <h1>Ratings</h1>
 

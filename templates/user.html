@@ -1,16 +1,49 @@
 {% extends 'base.html' %}
 {% block title %} User {{ user.user_id }} {% endblock %}
 {% block content %}
-    <h2>User {{ user.user_id }} is {{ user.age }} years old. Their zip code is {{ user.zipcode }}.</h2>
-    {% if user.ratings %}
-    What have they rated? <ul>
-        {% for item in user.ratings %}
-        <li> {{item.movie.title}}: {{ item.score }}</li>
-        {% endfor %}
+    
+    <!-- If it's the logged in user's page -->
+    {% if session['current_user'] == user.user_id %}
+        <h2>Welcome To Your Ratings Page!</h2>
+        
+        <!-- If logged in user has rated things -->
+        {% if user.ratings %}
+            <h3>Here's what you've rated</h3>
+            <ul>
+                {% for rating in user.ratings %}
+                    <li>{{rating.movie.title}}: {{ rating.score }}</li>
+                {% endfor %}
+            </ul>
+        
+        <!-- If logged in user hasn't rated things -->
+        {% else %}
+            <h3>You haven't rated anything yet. </h3>
+            <a href='/movies'>Click here</a> to find a movie to rate.
+        {% endif %}
+
+    <!-- if it's not the logged in user's page -->
     {% else %}
-    <p>User {{ user.user_id }} hasn't rated anything yet!</p>
+        <h2>User {{ user.user_id }} is {{ user.age }} years old. Their zip code is {{ user.zipcode }}.</h2>
+        
+        <!-- If that user has rated stuff -->
+        {% if user.ratings %}
+            <h3>What have they rated? </h3>
+            <ul>
+                {% for item in user.ratings %}
+                    <li> {{item.movie.title}}: {{ item.score }}</li>
+                {% endfor %}
+            </ul>
+        
+        <!-- If that user hasn't rated stuff -->
+        {% else %}
+            <h3>User {{ user.user_id }} hasn't rated anything yet!</h3>
+        {% endif %}
+
+
     {% endif %}
-    </ul>
+    
+
+
         
 
 

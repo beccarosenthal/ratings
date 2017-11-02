@@ -4,9 +4,16 @@
  
 <h1>Log In!</h1>
 <form action="/login" method="POST">
-Email Address:<input name="email" type='text' required><br>
-<!-- any way to make it so user password doesn't show up on screen? -->
-Password:<input name="password" type="password" required> <br>
-
-<input type="submit">
+    <table>
+        <tr>
+            <td>Email Address:</td>
+            <td><input name="email" type='text' required></td>
+        </tr>
+        <tr>
+            <td>Password: </td>
+            <td> <input name="password" type="password" required></td>
+        </tr>
+    </table>
+    <input type="submit">
+</form>
 {% endblock %}
