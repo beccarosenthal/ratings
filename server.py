@@ -138,8 +138,16 @@ def show_specific_movie(specific_movie_id):
 
     specific_movie = Movie.query.filter(Movie.movie_id ==
                                         specific_movie_id).one()
-   
+    
+    #getting average score to pass into jinja
+    total_score = 0
+    for rating_obj in specific_movie.ratings:
+        total_score +=rating_obj.score
+    
+    avg = float(total_score) / len(specific_movie.ratings)
+
     user_has_rated = False
+
     if 'current_user' in session:
     #figure out if logged in user has already rated that movie
         for rating_obj in specific_movie.ratings:
@@ -148,7 +156,8 @@ def show_specific_movie(specific_movie_id):
                 break
 
     return render_template('movie.html', movie=specific_movie,
-                            user_has_rated=user_has_rated)
+                            user_has_rated=user_has_rated,
+                            avg=avg)
 
 
 @app.route('/add_rating')

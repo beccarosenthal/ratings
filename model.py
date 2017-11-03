@@ -77,14 +77,21 @@ class Rating(db.Model):
         return "<Rating score=%s>" % (self.score)
 
 
+
+#############################################################
+# Making some model data for our tests
+
+
+
 ##############################################################################
 # Helper functions
 
-def connect_to_db(app):
+def connect_to_db(app, db_uri='postgresql:///ratings'):
     """Connect the database to our Flask app."""
 
     # Configure to use our PstgreSQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///ratings'
+    #default db_uri provided so tests can use other db
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
